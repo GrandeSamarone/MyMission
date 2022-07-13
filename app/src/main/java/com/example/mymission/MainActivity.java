@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            }
 
         buttonStart.setOnClickListener(this);
+        buttonLogin.setOnClickListener(this);
         buttonStop.setOnClickListener(this);
 
     }
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonLOGIN:
-                        Login();
+                Login();
                 break;case R.id.buttonStarter:
                     if(mAuth.getCurrentUser()!=null){
                         startService(myServiceItent);
@@ -95,10 +96,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("asdsadsd", "createUserWithEmail:success");
+                            Log.d("asdsadsd", "signInWithEmailAndPassword:success");
                             Log.d("asdsadsd", String.valueOf(user));
+                            txtLogin.setText(user.getEmail());
                             Toast.makeText(MainActivity.this, "Authentication Sucess.",
                                     Toast.LENGTH_SHORT).show();
+                        }else{
+                            Log.w("asdsadsd", "signInWithEmail:failure", task.getException());
                         }
                     }
                 });
