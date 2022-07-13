@@ -1,0 +1,225 @@
+{
+  "project_info": {
+    "project_number": "399406567781",
+    "firebase_url": "https://fogaca-app-default-rtdb.firebaseio.com",
+    "project_id": "fogaca-app",
+    "storage_bucket": "fogaca-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:5089d16101b7dc40eb918c",
+        "android_client_info": {
+          "package_name": "com.MarlosTrinidad.fogaca_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-qs1t3hced11pbih0lp339f6lsa5u3o7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.MarlosTrinidad.fogaca_app",
+            "certificate_hash": "40b87c908b99537830799811ad0939873aa81a3e"
+          }
+        },
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:e1ee257f4e7bd2bfeb918c",
+        "android_client_info": {
+          "package_name": "com.example.adm_fogacanew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-mjf960vvakga71ha9f8m0rubcmdthu5q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adm_fogacanew",
+            "certificate_hash": "40b87c908b99537830799811ad0939873aa81a3e"
+          }
+        },
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:1669a743ceadafe9eb918c",
+        "android_client_info": {
+          "package_name": "com.example.lojistatestechamada"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:fef9438d69422fb8eb918c",
+        "android_client_info": {
+          "package_name": "com.example.missionwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:04d7bd100f6fafc1eb918c",
+        "android_client_info": {
+          "package_name": "com.example.mymission"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-bgbr830697usfikfss1058dqdlhuepcg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mymission",
+            "certificate_hash": "40b87c908b99537830799811ad0939873aa81a3e"
+          }
+        },
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399406567781:android:7a4b30bb220d0b67eb918c",
+        "android_client_info": {
+          "package_name": "com.marlostrinidad.fogaca_motoboy_loja"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399406567781-dv3gvmr6gdekutjqooo4j9m9le9bobk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marlostrinidad.fogaca_motoboy_loja",
+            "certificate_hash": "40b87c908b99537830799811ad0939873aa81a3e"
+          }
+        },
+        {
+          "client_id": "399406567781-k58n2ortuqneg5ofpbu5r9u0nh62rq6b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marlostrinidad.fogaca_motoboy_loja",
+            "certificate_hash": "aaad4a61b947096314d126cbb1d34e5eafd1efd1"
+          }
+        },
+        {
+          "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbgVwpvt94jXp2YRGk88aYEDAUikCpnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399406567781-9274stj03icmi5rijo8cp94gmp28vp6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
