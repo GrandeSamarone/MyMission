@@ -9,7 +9,9 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,12 +30,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <service-->
+<!--            android:name="ReceiverService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true"-->
+<!--            android:stopWithTask="false"-->
+<!--            android:foregroundServiceType="location" />-->
+
         <service
-            android:name="ReceiverService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false"
-            android:foregroundServiceType="location" />
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="location|dataSync"
+            tools:node="merge"
+            tools:ignore="Instantiatable" />
     </application>
 
 </manifest>

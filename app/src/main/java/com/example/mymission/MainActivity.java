@@ -19,6 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.OutOfQuotaPolicy;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,16 +34,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-
+    WorkManager workManager;
+    private OneTimeWorkRequest workRequestOne;
     private Button buttonStart, buttonStop,buttonLogin;
     private  TextView txtLogin;
     Intent myServiceItent;
     private FirebaseAuth mAuth;
-
+    UUID id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonLogin.setOnClickListener(this);
         buttonStop.setOnClickListener(this);
 
+
+
+
+        workManager = WorkManager.getInstance(getApplicationContext());
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                //.setRequiresBatteryNotLow(true)
+                .build();
+
+        workRequestOne =new  OneTimeWorkRequest.Builder(CallbackWorker.class)
+                .setConstraints(constraints)
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .build();
+
+
+        workManager.getWorkInfoByIdLiveData(workRequestOne.getId()).observe(this,
+                new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        Log.d("oaksasaa","OnChanged: W Status:"+workInfo.getState());
+                        Log.d("oaksasaa","OnChanged: W ID:"+workInfo.getId());
+                        id=workInfo.getId();
+                    }
+                });
     }
 
     @Override
@@ -76,7 +112,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Login();
                 break;case R.id.buttonStarter:
                     if(mAuth.getCurrentUser()!=null){
-                        startService(myServiceItent);
+                     //   startService(myServiceItent);
+
+                        workManager.enqueueUniqueWork(
+                                "MotoboyON",
+                                ExistingWorkPolicy.REPLACE,
+                                workRequestOne);
                     }else{
                         Toast.makeText(MainActivity.this, "SignIN",
                                 Toast.LENGTH_SHORT).show();
@@ -84,7 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 break;
             case R.id.buttonStop:
-                stopService(myServiceItent);
+              //  stopService(myServiceItent);
+                workManager.cancelUniqueWork("MotoboyON");
                 break;
         }
     }
