@@ -1,25 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/bubble_background"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_bubble"
+            tools:ignore="ContentDescription" />
 
+    <FrameLayout
+        android:id="@+id/notification_corrida"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="visible"
+        tools:visibility="visible">
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/notification_background_corrida"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bag" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="30dp">
         <TextView
-            android:id="@+id/text_widget"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:textSize="22dp"
-            android:text="10"
+            android:id="@+id/counter_notification_corrida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="1"
             android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/back_circule"
-            />
-    </RelativeLayout>
-</RelativeLayout>
+            android:textAlignment="center"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+
+    <FrameLayout
+       android:layout_gravity="top|right"
+        android:id="@+id/notification_msg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/notification_background_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_msg" />
+
+    </FrameLayout>
+</FrameLayout>

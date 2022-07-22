@@ -2,8 +2,11 @@ package com.example.mymission;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,8 +18,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
@@ -37,10 +43,11 @@ public class MyBubbles extends ContextWrapper{
     WindowManager windowManager;
     ImageView imageViewClose;
     int MAX_CLICK_DURATION=200;
-    TextView txtWidget;
     float height,width;
     boolean mostrar;
     WorkManager workManager;
+    ImageView imageclick;
+    WindowManager.LayoutParams layoutParams;
     private OneTimeWorkRequest workRequestOne;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -55,12 +62,12 @@ public class MyBubbles extends ContextWrapper{
                     @Override
                     public void onChanged(@Nullable List<WorkInfo> workInfos) {
                         Log.d("DEBUG", "onChanged()");
-                        Log.d("DEBUG", "onChanged()");
                         if (workInfos != null && (!(workInfos.isEmpty()))) {
                             for (WorkInfo wI: workInfos) {
                                 Log.d("DEBUG","OnChanged: W Status:"+wI.getState());
                                 if (wI.getState() == WorkInfo.State.CANCELLED) {
                                      mostrar=true;
+
                                 }
                             }
                         }
@@ -77,7 +84,7 @@ public class MyBubbles extends ContextWrapper{
         ///INFLA
         mFloatingview= LayoutInflater.from(context).inflate(R.layout.layout_widget,null);
 
-        WindowManager.LayoutParams layoutParams= new
+      layoutParams= new
                 WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -114,20 +121,9 @@ public class MyBubbles extends ContextWrapper{
         windowManager.getDefaultDisplay().getMetrics(metrics);
         height= metrics.heightPixels;
         width =metrics.widthPixels;
-
-        txtWidget=(TextView) mFloatingview.findViewById(R.id.text_widget);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                txtWidget.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-                handler.postDelayed(this,1000);
-            }
-        },10);
-
+        imageclick=mFloatingview.findViewById(R.id.bubble_background);
         //movimentar
-        txtWidget.setOnTouchListener(new View.OnTouchListener() {
+        imageclick.setOnTouchListener(new View.OnTouchListener() {
 
             int initialX,initialY;
             float initialTouchX,initialTouchY;
@@ -139,11 +135,6 @@ public class MyBubbles extends ContextWrapper{
 
                     case  MotionEvent.ACTION_DOWN:
                         startclickTime= Calendar.getInstance().getTimeInMillis();
-                        if(mostrar){
-                            imageViewClose.setVisibility(View.VISIBLE);
-                        }
-
-
                         initialX=layoutParams.x;
                         initialY=layoutParams.y;
                         initialTouchX=motionEvent.getRawX();
@@ -152,18 +143,22 @@ public class MyBubbles extends ContextWrapper{
                         return true;
 
                     case MotionEvent.ACTION_UP:
+
                         long clickDuration=Calendar.getInstance().getTimeInMillis()-startclickTime;
                         imageViewClose.setVisibility(View.GONE);
                         layoutParams.x=initialX+(int)(initialTouchX-motionEvent.getRawX());
                         layoutParams.y=initialY+(int)(motionEvent.getRawY()-initialTouchY);
 
+                        Log.d("oskdsodkds","CLICK DURATION::"+clickDuration);
                         if(clickDuration<MAX_CLICK_DURATION){
-                            // Toast.makeText(this, "Time"+txtWidget.getText().toString(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP); // You need this if starting
+                            startActivity(intent);
                         }
                         return true;
 
                     case MotionEvent.ACTION_MOVE:
-
+                        mostrar(mostrar);
                         //calcular cordenadas da view
                         layoutParams.x=initialX+(int)(initialTouchX-motionEvent.getRawX());
                         layoutParams.y=initialY+(int)(motionEvent.getRawY()-initialTouchY);
@@ -172,30 +167,14 @@ public class MyBubbles extends ContextWrapper{
                         windowManager.updateViewLayout(mFloatingview,layoutParams);
 
 
-                        if(mostrar){
-                            if(layoutParams.y>(height*0.6)){
-                                imageViewClose.setImageResource(R.drawable.close);
-                                if(mFloatingview!=null && imageViewClose!=null){
-                                    windowManager.removeView(mFloatingview);
-                                    windowManager.removeView(imageViewClose);
-                                }
-                            }else{
-                                imageViewClose.setImageResource(R.drawable.close_white);
+                        return true;
 
-                            }
-                        }
+                    case MotionEvent.ACTION_BUTTON_PRESS:
 
                         return true;
 
                 }
-                if(mostrar){
-                    if(mFloatingview!=null){
-                        windowManager.removeView(mFloatingview);
-                    }
-                    if(imageViewClose!=null){
-                        windowManager.removeView(imageViewClose);
-                    }
-                }
+
 
 
                 return false;
@@ -203,8 +182,56 @@ public class MyBubbles extends ContextWrapper{
         });
 
     }
+    void bringToFront(){
 
-    void closed(){
+        ActivityManager activtyManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfos = activtyManager.getRunningTasks(3);
+        for (ActivityManager.RunningTaskInfo runningTaskInfo : runningTaskInfos)
+        {
+            if (this.getPackageName().equals(runningTaskInfo.topActivity.getPackageName()))
+            {
+                activtyManager.moveTaskToFront(runningTaskInfo.id, ActivityManager.MOVE_TASK_WITH_HOME);
+                return;
+            }
+        }
+    }
+    protected  void mostrar(boolean valor){
 
+
+        if(valor){
+            imageViewClose.setVisibility(View.VISIBLE);
+
+            if(layoutParams.y>(height*0.6)){
+                imageViewClose.setImageResource(R.drawable.close);
+
+                if(mFloatingview!=null && imageViewClose!=null){
+                    windowManager.removeView(mFloatingview);
+                    windowManager.removeView(imageViewClose);
+                }
+            }else{
+                imageViewClose.setImageResource(R.drawable.close_white);
+            }
+
+        }
+
+    }
+
+    protected void moveParaFrente() {
+        if (Build.VERSION.SDK_INT >= 11) { // honeycomb
+            final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager
+                    .getRunningTasks(Integer.MAX_VALUE);
+
+            for (int i = 0; i < recentTasks.size(); i++) {
+//                Log.d("Executed app", "Application executed : "
+//                        + recentTasks.get(i).baseActivity.toShortString()
+//                        + "\t\t ID: " + recentTasks.get(i).id + "");
+                // bring to front
+                if (recentTasks.get(i).baseActivity.toShortString().contains(BuildConfig.APPLICATION_ID)) {
+                    activityManager.moveTaskToFront(recentTasks.get(i).id, ActivityManager.MOVE_TASK_WITH_HOME);
+
+                }
+            }
+        }
     }
 }
