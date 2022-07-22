@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION}, 200);
         }
 
-
+        getPermission();
 
         mAuth = FirebaseAuth.getInstance();
         myServiceItent=new Intent(getApplicationContext(), ReceiverService.class);
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
 
         workRequestOne =new  OneTimeWorkRequest.Builder(CallbackWorker.class)
+                .addTag("ON")
                 .setConstraints(constraints)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build();
@@ -171,6 +177,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    public void getPermission(){
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)){
+
+            Intent intent=new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:"+getPackageName()));
+            startActivityForResult(intent,1);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==1){
+            if(!Settings.canDrawOverlays(MainActivity.this)){
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
