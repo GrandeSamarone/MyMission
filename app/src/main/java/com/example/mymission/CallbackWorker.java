@@ -77,13 +77,7 @@ public class CallbackWorker  extends ListenableWorker {
     GeoFire geoFire;
     FusedLocationProviderClient fusedLocation;
     LocationRequest locationRequest;
-    int LAYOUT_FLAG;
-    View mFloatingview;
     WindowManager windowManager;
-    ImageView imageViewClose;
-    int MAX_CLICK_DURATION=200;
-    TextView txtWidget;
-    float height,width;
 
 
     public CallbackWorker(@NonNull Context appContext, @NonNull WorkerParameters workerParams) {
@@ -104,143 +98,21 @@ public class CallbackWorker  extends ListenableWorker {
     @NonNull
     @Override
     public ListenableFuture<Result> startWork() {
-      //  setForegroundAsync(createForeGroundInfo());
-        new MyBubbles(mContext);
+
+        //Icone Notification
         getForegroundInfoAsync();
 
         return CallbackToFutureAdapter.getFuture(completer -> {
-            ccompleter=completer;
 
-            startListen(ccompleter);
-           // Bubbles(ccompleter);
+            new MyBubbles(mContext);
+                 startListen(completer);
 
-            return  ccompleter;
+
+            return  completer;
         });
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    public void Bubbles(CallbackToFutureAdapter.Completer<Result> completer){
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            LAYOUT_FLAG= WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        }else{
-            LAYOUT_FLAG= WindowManager.LayoutParams.TYPE_PHONE;
-        }
-
-
-        ///INFLA
-        mFloatingview= LayoutInflater.from(mContext).inflate(R.layout.layout_widget,null);
-
-        WindowManager.LayoutParams layoutParams= new
-                WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_FLAG,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-
-        ///Position inicial
-        layoutParams.gravity= Gravity.TOP|Gravity.RIGHT;
-        layoutParams.x=0;
-        layoutParams.y=100;
-
-        ///Parametro do layout close button
-        WindowManager.LayoutParams imageparams= new WindowManager.LayoutParams(
-                140,
-                140,
-                LAYOUT_FLAG,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-
-        imageparams.gravity=Gravity.BOTTOM|Gravity.CENTER;
-        imageparams.y=100;
-
-        windowManager=(WindowManager)mContext.getSystemService(WINDOW_SERVICE);
-
-        imageViewClose=new ImageView(mContext);
-        imageViewClose.setImageResource(R.drawable.close);
-        imageViewClose.setVisibility(View.INVISIBLE);
-        windowManager.addView(imageViewClose,imageparams);
-        windowManager.addView(mFloatingview,layoutParams);
-        mFloatingview.setVisibility(View.VISIBLE);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        height= metrics.heightPixels;
-        width =metrics.widthPixels;
-
-        txtWidget=(TextView) mFloatingview.findViewById(R.id.text_widget);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                txtWidget.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-                handler.postDelayed(this,1000);
-            }
-        },10);
-
-        //movimentar
-        txtWidget.setOnTouchListener(new View.OnTouchListener() {
-
-            int initialX,initialY;
-            float initialTouchX,initialTouchY;
-            long startclickTime;
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                switch (motionEvent.getAction()){
-
-                    case  MotionEvent.ACTION_DOWN:
-                        startclickTime= Calendar.getInstance().getTimeInMillis();
-                        imageViewClose.setVisibility(View.VISIBLE);
-
-                        initialX=layoutParams.x;
-                        initialY=layoutParams.y;
-                        initialTouchX=motionEvent.getRawX();
-                        initialTouchY=motionEvent.getRawY();
-
-                        return true;
-
-                    case MotionEvent.ACTION_UP:
-                        long clickDuration=Calendar.getInstance().getTimeInMillis()-startclickTime;
-                        imageViewClose.setVisibility(View.GONE);
-                        layoutParams.x=initialX+(int)(initialTouchX-motionEvent.getRawX());
-                        layoutParams.y=initialY+(int)(motionEvent.getRawY()-initialTouchY);
-
-                        if(clickDuration<MAX_CLICK_DURATION){
-                              Toast.makeText(mContext, "Time"+txtWidget.getText().toString(), Toast.LENGTH_SHORT).show();
-                        }else{
-                            if(layoutParams.y>(height*0.6)){
-                                //onStopped();
-                            }
-                        }
-                        return true;
-
-                    case MotionEvent.ACTION_MOVE:
-
-                        //calcular cordenadas da view
-                        layoutParams.x=initialX+(int)(initialTouchX-motionEvent.getRawX());
-                        layoutParams.y=initialY+(int)(motionEvent.getRawY()-initialTouchY);
-
-                        //Atualizar layout
-                        windowManager.updateViewLayout(mFloatingview,layoutParams);
-
-
-//                        if(layoutParams.y>(height*0.6)){
-//                            imageViewClose.setImageResource(R.drawable.close);
-//                        }else{
-//                            imageViewClose.setImageResource(R.drawable.close_white);
-//                        }
-                        return true;
-
-                }
-
-
-                return false;
-            }
-        });
-    }
 
     @SuppressLint("MissingPermission")
     public void startListen(CallbackToFutureAdapter.Completer<Result> completer) {
@@ -261,7 +133,7 @@ public class CallbackWorker  extends ListenableWorker {
             public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null) {
                     TokenRefresh();
-                    completer.set(Result.success());
+                    completer.set(Result.failure());
                 }
             }
         });
@@ -281,19 +153,10 @@ public class CallbackWorker  extends ListenableWorker {
 
     @Override
     public void onStopped() {
-        cancelar=true;
-        Log.d("osakdsodksd","ONSTOPPED "+cancelar);
-
         fusedLocation.removeLocationUpdates(locationCallback);
-        geoFire.removeLocation("YJgmEZXTa7ZLe6SNsuLkczI5ZzM2");
+       geoFire.removeLocation("YJgmEZXTa7ZLe6SNsuLkczI5ZzM2");
 
         Log.d("ClearFromRecentService", "Service Destroyed");
-        if(mFloatingview!=null){
-            windowManager.removeView(mFloatingview);
-        }
-        if(imageViewClose!=null){
-            windowManager.removeView(imageViewClose);
-        }
         super.onStopped();
     }
 
@@ -328,17 +191,5 @@ public class CallbackWorker  extends ListenableWorker {
         }
 
         return future;
-    }
-    private ForegroundInfo createForeGroundInfo(){
-        Notification notification = myAppsNotificationManager.getNotification(MainActivity.class,
-                "CallbackWorker Running...",
-                1,
-                false,
-                10);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return new ForegroundInfo(10, notification, FOREGROUND_SERVICE_TYPE_LOCATION);
-        }else{
-            return new ForegroundInfo(10, notification);
-        }
     }
 }

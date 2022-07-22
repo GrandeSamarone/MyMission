@@ -44,8 +44,8 @@ public class MyBubbles extends ContextWrapper{
     private OneTimeWorkRequest workRequestOne;
 
     @SuppressLint("ClickableViewAccessibility")
-    public MyBubbles(Context base) {
-        super(base);
+    public MyBubbles(Context context) {
+        super(context);
          mostrar=false;
         workManager = WorkManager.getInstance(getApplicationContext());
 
@@ -75,7 +75,7 @@ public class MyBubbles extends ContextWrapper{
 
 
         ///INFLA
-        mFloatingview= LayoutInflater.from(base).inflate(R.layout.layout_widget,null);
+        mFloatingview= LayoutInflater.from(context).inflate(R.layout.layout_widget,null);
 
         WindowManager.LayoutParams layoutParams= new
                 WindowManager.LayoutParams(
@@ -101,9 +101,9 @@ public class MyBubbles extends ContextWrapper{
         imageparams.gravity=Gravity.BOTTOM|Gravity.CENTER;
         imageparams.y=100;
 
-        windowManager=(WindowManager)base.getSystemService(WINDOW_SERVICE);
+        windowManager=(WindowManager)context.getSystemService(WINDOW_SERVICE);
 
-        imageViewClose=new ImageView(base);
+        imageViewClose=new ImageView(context);
         imageViewClose.setImageResource(R.drawable.close);
         imageViewClose.setVisibility(View.INVISIBLE);
         windowManager.addView(imageViewClose,imageparams);

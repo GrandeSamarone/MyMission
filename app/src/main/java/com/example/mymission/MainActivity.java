@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
-                //.setRequiresBatteryNotLow(true)
                 .build();
 
         workRequestOne =new  OneTimeWorkRequest.Builder(CallbackWorker.class)
@@ -98,17 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setConstraints(constraints)
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build();
-
-
-        workManager.getWorkInfoByIdLiveData(workRequestOne.getId()).observe(this,
-                new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        Log.d("oaksasaa","OnChanged: W Status:"+workInfo.getState());
-                        Log.d("oaksasaa","OnChanged: W ID:"+workInfo.getId());
-                        id=workInfo.getId();
-                    }
-                });
     }
 
     @Override
