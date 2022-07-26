@@ -1,5 +1,7 @@
 package com.example.mymission;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -44,13 +46,17 @@ class MyAppsNotificationManager {
 
     public Notification getNotification(Class targetNotificationActivity, String title,  int priority, boolean autoCancel, int notificationId){
         Intent intent = new Intent(context, targetNotificationActivity);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, 0);
-
+        PendingIntent pendingIntent;
+        if(Build.VERSION.SDK_INT >= 31)
+            pendingIntent = PendingIntent.getActivity(context, 1, intent, FLAG_IMMUTABLE);
+        else
+            pendingIntent = PendingIntent.getActivity(context, 1, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"123")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_foreground))
                 .setContentTitle(title)
+
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setChannelId("123")

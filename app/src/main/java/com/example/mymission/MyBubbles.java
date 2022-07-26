@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -40,6 +41,7 @@ public class MyBubbles extends ContextWrapper{
 
     int LAYOUT_FLAG;
     View mFloatingview;
+    String floatingatual;
     WindowManager windowManager;
     ImageView imageViewClose;
     int MAX_CLICK_DURATION=200;
@@ -80,9 +82,10 @@ public class MyBubbles extends ContextWrapper{
             LAYOUT_FLAG= WindowManager.LayoutParams.TYPE_PHONE;
         }
 
-
         ///INFLA
         mFloatingview= LayoutInflater.from(context).inflate(R.layout.layout_widget,null);
+        floatingatual= String.valueOf(mFloatingview);
+
 
       layoutParams= new
                 WindowManager.LayoutParams(
@@ -151,6 +154,9 @@ public class MyBubbles extends ContextWrapper{
 
                         Log.d("oskdsodkds","CLICK DURATION::"+clickDuration);
                         if(clickDuration<MAX_CLICK_DURATION){
+
+                            Log.d("oskdoskd","oooo"+mFloatingview.getWindowId());
+
                             Intent intent = new Intent(context, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP); // You need this if starting
                             startActivity(intent);
@@ -165,13 +171,8 @@ public class MyBubbles extends ContextWrapper{
 
                         //Atualizar layout
                         windowManager.updateViewLayout(mFloatingview,layoutParams);
-
-
                         return true;
 
-                    case MotionEvent.ACTION_BUTTON_PRESS:
-
-                        return true;
 
                 }
 
@@ -181,19 +182,6 @@ public class MyBubbles extends ContextWrapper{
             }
         });
 
-    }
-    void bringToFront(){
-
-        ActivityManager activtyManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTaskInfos = activtyManager.getRunningTasks(3);
-        for (ActivityManager.RunningTaskInfo runningTaskInfo : runningTaskInfos)
-        {
-            if (this.getPackageName().equals(runningTaskInfo.topActivity.getPackageName()))
-            {
-                activtyManager.moveTaskToFront(runningTaskInfo.id, ActivityManager.MOVE_TASK_WITH_HOME);
-                return;
-            }
-        }
     }
     protected  void mostrar(boolean valor){
 
@@ -216,22 +204,16 @@ public class MyBubbles extends ContextWrapper{
 
     }
 
-    protected void moveParaFrente() {
-        if (Build.VERSION.SDK_INT >= 11) { // honeycomb
-            final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            final List<ActivityManager.RunningTaskInfo> recentTasks = activityManager
-                    .getRunningTasks(Integer.MAX_VALUE);
 
-            for (int i = 0; i < recentTasks.size(); i++) {
-//                Log.d("Executed app", "Application executed : "
-//                        + recentTasks.get(i).baseActivity.toShortString()
-//                        + "\t\t ID: " + recentTasks.get(i).id + "");
-                // bring to front
-                if (recentTasks.get(i).baseActivity.toShortString().contains(BuildConfig.APPLICATION_ID)) {
-                    activityManager.moveTaskToFront(recentTasks.get(i).id, ActivityManager.MOVE_TASK_WITH_HOME);
 
-                }
-            }
+
+    public void removeAllViews() {
+        Log.d("sodksodk","REMOVEALL");
+        if(mFloatingview!=null){
+            windowManager.removeView(mFloatingview);
+        }
+        if(imageViewClose!=null){
+            windowManager.removeView(imageViewClose);
         }
     }
 }

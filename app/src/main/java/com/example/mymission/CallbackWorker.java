@@ -7,6 +7,7 @@ import static android.os.Looper.getMainLooper;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.location.Location;
@@ -64,6 +65,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class CallbackWorker  extends ListenableWorker {
+
+    MyBubbles myBubbles ;
     MyAppsNotificationManager myAppsNotificationManager;
    Handler hand;
     String MOTOBOYS = "TesteMotoboysOnline";
@@ -77,8 +80,7 @@ public class CallbackWorker  extends ListenableWorker {
     GeoFire geoFire;
     FusedLocationProviderClient fusedLocation;
     LocationRequest locationRequest;
-    WindowManager windowManager;
-
+    SharedPreferences sharedPref;
 
     public CallbackWorker(@NonNull Context appContext, @NonNull WorkerParameters workerParams) {
         super(appContext, workerParams);
@@ -89,9 +91,7 @@ public class CallbackWorker  extends ListenableWorker {
         geoFire = new GeoFire(ref);
         hand = new Handler(getMainLooper());
 
-
-
-
+       sharedPref = appContext.getSharedPreferences("mFloatingview", Context.MODE_PRIVATE);
     }
 
 
@@ -103,8 +103,9 @@ public class CallbackWorker  extends ListenableWorker {
         getForegroundInfoAsync();
 
         return CallbackToFutureAdapter.getFuture(completer -> {
+            myBubbles=  new MyBubbles(mContext);
 
-            new MyBubbles(mContext);
+
                  startListen(completer);
 
 
@@ -117,14 +118,11 @@ public class CallbackWorker  extends ListenableWorker {
     @SuppressLint("MissingPermission")
     public void startListen(CallbackToFutureAdapter.Completer<Result> completer) {
         // monitorando se o gps ta ativo
-
-
-
         locationRequest = LocationRequest.create()
                           .setInterval(4000)
                           .setFastestInterval(8000)
                           .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
-       // geoFire.setLocation("YJgmEZXTa7ZLe6SNsuLkczI5ZzM2", new GeoLocation(-10.9063283, -61.9253517));
+
        fusedLocation = LocationServices.getFusedLocationProviderClient(mContext);
         fusedLocation.requestLocationUpdates(locationRequest, locationCallback, hand.getLooper());
 
@@ -153,9 +151,9 @@ public class CallbackWorker  extends ListenableWorker {
 
     @Override
     public void onStopped() {
+
         fusedLocation.removeLocationUpdates(locationCallback);
        geoFire.removeLocation("YJgmEZXTa7ZLe6SNsuLkczI5ZzM2");
-
         Log.d("ClearFromRecentService", "Service Destroyed");
         super.onStopped();
     }
@@ -191,5 +189,20 @@ public class CallbackWorker  extends ListenableWorker {
         }
 
         return future;
+    }
+
+    private  void preferences(int valor){
+        int highScore = sharedPref.getInt("mFloatingview",Context.MODE_PRIVATE);
+        Log.d("oskdoskdsodk","sodksodksd"+ highScore);
+
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putInt("mFloatingview", valor);
+        editor.apply();
+        Log.d("oskdoskdsodk","sodksodksd"+ highScore);
+
+
+        // Log.d("osakdsodksodk","asas "+sharedPref);
     }
 }
